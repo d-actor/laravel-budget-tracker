@@ -10,4 +10,6 @@ class Transaction extends Model
     {
         return $this->belongsTo('App\Account');
     }
+
+    protected $fillable = ['modifier', 'amount', 'description', 'account_id'];
 }

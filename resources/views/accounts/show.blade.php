@@ -7,9 +7,9 @@
         <h3>{{ $account->name }}</h3>
       </div>
       <p>Current Balance: ${{ $account->balance }}</p>
-      <a href="{{ 'transactions.create' }}">New Transaction</a>
+      <a href="{{ route('accounts.transactions.create', ['account' => $account->id]) }}">New Transaction</a>
       <br />
-      <a href="{{ 'transactions.index' }}">Transaction History</a>
+      <a href="{{ route('accounts.transactions.index', ['account' => $account->id]) }}">Transaction History</a>
       <p>Last Updated {{ $account->updated_at->diffForHumans() }}</p> 
     </div>
     <a href="{{ route('accounts.index') }}"><strong>Your Accounts</strong></a>

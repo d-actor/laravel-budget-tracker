@@ -3,82 +3,64 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Transaction;
+use App\Account;
+use App\Http\Requests\StoreTransaction;
 
 class TransactionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index($id)
     {
-        //
+        $account = Account::findOrFail($id);
+        return view('accounts.transactions.index', ['account' => $account, 'transactions'=> $account->transactions]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function create($id)
     {
-        //
+        return view('accounts.transactions.create', ['account'=> Account::findOrFail($id)]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(StoreTransaction $request)
     {
-        //
+        $validatedData = $request->validated();
+        $transaction = Transaction::create($validatedData);
+        $transaction->save();
+
+        $request->session()->flash('status', 'Transaction Created');
+
+        return redirect()->route('accounts.transactions.show', ['account' => $transaction->account_id, 'transaction' => $transaction->id,]);
+    }
+  
+    public function show($accountId, $transactionId)
+    {
+        return view('accounts.transactions.show', ['transaction' => Transaction::findOrFail($transactionId), 'account' => Account::findOrFail($accountId)]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function edit($accountId, $transactionId)
     {
-        //
+        $account = Account::findOrFail($accountId);
+        $transaction = Transaction::findOrFail($transactionId);
+        return view('accounts.transactions.edit', ['account'=>$account, 'transaction'=>$transaction]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function update(StoreTransaction $request, $accountId, $transactionId)
     {
-        //
+        $validatedData = $request->validated();
+        $transaction = Transaction::find($transactionId);
+        $transaction->fill($validatedData);
+        $transaction->save();
+
+        $request->session()->flash('status', 'Transaction Created');
+
+        return redirect()->route('accounts.transactions.show', ['account' => $transaction->account_id, 'transaction' => $transaction->id,]); 
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function destroy(Request $request, $accountId, $transactionId)
     {
-        //
-    }
+        $transaction = Transaction::findOrFail($transactionId);
+        $transaction->delete();
+        $request->session()->flash('status', 'Transaction deleted');
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return redirect()->route('accounts.transactions.index', ['account'=>$accountId]);
     }
 }

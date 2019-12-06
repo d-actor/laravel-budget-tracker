@@ -39,8 +39,9 @@ class AccountController extends Controller
 
     public function edit($id)
     {
+        $user = Auth::user();
         $account = Account::findOrFail($id);
-        return view('accounts.edit', ['account' => $account]);
+        return view('accounts.edit', ['account' => $account, 'user_id' => $user->id]);
     }
 
     public function update(StoreAccount $request, $id)

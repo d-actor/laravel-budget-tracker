@@ -17,7 +17,6 @@
                     Welcome
                 </div>
                 <ul>
-                    <li><a href="{{ route('home') }}">Home</a></li>
                     <li><a href="{{ route('accounts.index') }}">Your Accounts</a></li>
                     <li><a href="{{ route('accounts.create') }}">Create Account</a></li>
                  </ul>

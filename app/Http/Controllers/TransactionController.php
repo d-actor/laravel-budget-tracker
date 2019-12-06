@@ -27,18 +27,14 @@ class TransactionController extends Controller
         $transaction->save();
 
         $account = Account::findOrFail($transaction->account_id);
-        if ($transaction->modifier === 'Credit') {
-            $modifier = '+';
-        } elseif ($transaction->modifier === 'Debit') {
-            $modifier = '-';
-        }
-        switch($modifier) {
-            case "+":
+        
+        switch($transaction->modifier) {
+            case "Credit":
                 $newBal = $account->balance + $transaction->amount;
                 $account->balance = $newBal;
                 $account->save();
                 break;
-            case "-":
+            case "Debit":
                 $newBal = $account->balance - $transaction->amount;
                 $account->balance = $newBal;
                 $account->save();

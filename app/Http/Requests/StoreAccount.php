@@ -13,7 +13,7 @@ class StoreAccount extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,9 @@ class StoreAccount extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name'=> 'bail|required|min:5',
+            'balance' => 'required|numeric|min:100',
+            'user_id' => 'required',
         ];
     }
 }

@@ -17,31 +17,50 @@ class AccountController extends Controller
 
     public function create()
     {
-        return view('accounts.create');
+        $user = Auth::user();
+        return view('accounts.create', ['user_id' => $user->id]);
     }
 
-    public function store(Request $request)
+    public function store(StoreAccount $request)
     {
-        //
+        $validatedData = $request->validated();
+        $account = Account::create($validatedData);
+        $account->save();
+
+        $request->session()->flash('status', 'Account Created');
+
+        return redirect()->route('accounts.show', ['account' => $account->id]);
     }
 
     public function show($id)
     {
-        //
+        return view('accounts.show', ['account' => Account::findOrFail($id)]);
     }
 
     public function edit($id)
     {
-        //
+        $account = Account::findOrFail($id);
+        return view('accounts.edit', ['account' => $account]);
     }
 
-    public function update(Request $request, $id)
+    public function update(StoreAccount $request, $id)
     {
-        //
+        $validatedData = $request->validated();
+        $account = Account::findOrFail($id);
+        $account->fill($validatedData);
+        $account->save();
+
+        $request->session()->flash('status', 'Account Info Updated');
+        
+        return redirect()->route('accounts.show', ['account' => $account->id]);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $account = Account::findOrFail($id);
+        $account->delete();
+        $request->session()->flash('status', 'Account Deleted');
+
+        return redirect()->route('accounts.index');
     }
 }

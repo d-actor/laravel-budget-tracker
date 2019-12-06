@@ -5,9 +5,10 @@
 </p>
 <p>
   <label>Balance</label>
-  <input type="number" step="0.01"" name="balance" 
+  <input type="number" step="0.01" name="balance" 
     value="{{ old('balance', $account->balance ?? null) }}" />
 </p>
+<input style="display: none" type="number" name="user_id" value="{{ $user_id }}"/>
 
 @if($errors->any())
   <div>

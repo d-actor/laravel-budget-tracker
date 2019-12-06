@@ -15,4 +15,6 @@ class Account extends Model
     {
         return $this->hasMany('App\Transaction');
     }
+
+    protected $fillable = ['name', 'balance', 'user_id'];
 }

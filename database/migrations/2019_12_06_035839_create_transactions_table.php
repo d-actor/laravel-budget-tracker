@@ -16,6 +16,11 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
+            $table->text('description');
+            $table->float('amount');
+            $table->string('modifier');
+            $table->unsignedBigInteger('account_id')->index();
+            $table->foreign('account_id')->references('id')->on('accounts');
         });
     }
 

@@ -11,5 +11,13 @@ class Transaction extends Model
         return $this->belongsTo('App\Account');
     }
 
+    // public static function boot()
+    // {
+    //     parent::boot();
+    //     self::created(function($model) {
+    //     });
+    // }
+
     protected $fillable = ['modifier', 'amount', 'description', 'account_id'];
+    
 }

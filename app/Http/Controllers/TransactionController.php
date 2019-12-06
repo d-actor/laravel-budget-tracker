@@ -26,6 +26,19 @@ class TransactionController extends Controller
         $transaction = Transaction::create($validatedData);
         $transaction->save();
 
+        $account = Account::findOrFail($transaction->account_id);
+        $modifier = $transaction->modifier == 'Debit' ? '-' : '+';
+        switch($modifier) {
+            case "+":
+                $newBal = $account->balance + $transaction->amount;
+                $account->balance = $newBal;
+                $account->save();
+            case "-":
+                $newBal = $account->balance - $transaction->amount;
+                $account->balance = $newBal;
+                $account->save();
+        }
+
         $request->session()->flash('status', 'Transaction Created');
 
         return redirect()->route('accounts.transactions.show', ['account' => $transaction->account_id, 'transaction' => $transaction->id,]);
